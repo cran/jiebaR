@@ -37,7 +37,10 @@
 #' 
 #' @export
 segment <- function(code, jiebar) {
-
+  stopifnot("segment" %in% class(jiebar))
+  if(jiebar$PrivateVarible$timestamp != TIMESTAMP){
+    stop("Please create a new worker after jiebaR is reloaded.")
+  }
   if (!is.character(code) || length(code) != 1) 
     stop("Argument 'code' must be an string.")
   
@@ -142,10 +145,10 @@ cutw <- function(code, jiebar,  symbol, FILESMODE) {
   if (symbol == F) {
     code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
   } 
-  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
+#  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
   result <- jiebar$worker$cut(code)
   if (symbol == F) {
-    result <- grep("[^[:space:]]", result, value = T)
+    result = result[ result != " "]
   }
   if (.Platform$OS.type == "windows") {
     Encoding(result)<-"UTF-8"}

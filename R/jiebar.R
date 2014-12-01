@@ -8,25 +8,22 @@
 #' @param type The type of jiebaR workers including \code{mix}, \code{mp}, \code{hmm}, 
 #'   \code{query}, \code{tag}, \code{simhash}, and \code{keywords}.
 #'   
-#' @param dict A path to main dictionary, default value is \code{
-#'   DICTPATH}, and the value is used for \code{mix}, \code{mp}, \code{query},
+#' @param dict A path to main dictionary, default value is \code{DICTPATH},
+#'  and the value is used for \code{mix}, \code{mp}, \code{query},
 #'  \code{tag}, \code{simhash} and \code{keywords} workers.
 #'  
-#' @param hmm A path to Hidden Markov Model, default value is \code{
-#'   HMMPATH}, and the value is used for \code{mix}, \code{hmm}, \code{query}, 
-#'   \code{tag}, \code{simhash} and \code{keywords} workers.
+#' @param hmm A path to Hidden Markov Model, default value is \code{HMMPATH}, 
+#' and the value is used for \code{mix}, \code{hmm}, \code{query}, 
+#'  \code{tag}, \code{simhash} and \code{keywords} workers.
 #'   
-#' @param user A path to user dictionary, default value is \code{
-#'   USERPATH}, and the value is used for \code{mix}, 
-#'   \code{tag} and \code{mp} workers.
+#' @param user A path to user dictionary, default value is \code{USERPATH},
+#'  and the value is used for \code{mix}, \code{tag} and \code{mp} workers.
 #'
-#' @param idf A path to inverse document frequency, default value is \code{
-#'   IDFPATH}, and the value is used for 
-#'   \code{simhash} and \code{keywords} workers.
+#' @param idf A path to inverse document frequency, default value is \code{IDFPATH},
+#'  and the value is used for \code{simhash} and \code{keywords} workers.
 #'   
-#' @param stop_word A path to stop word dictionary, default value is \code{
-#'   STOPPATH}, and the value is used for 
-#'   \code{simhash} and \code{keywords} workers.
+#' @param stop_word A path to stop word dictionary, default value is \code{STOPPATH},
+#'  and the value is used for \code{simhash} and \code{keywords} workers.
 #'   
 #' @param write Whether to write the output to a file, or return 
 #'   a the result in a object, when the input is a file path. The 
@@ -145,61 +142,61 @@ worker <- function(type = "mix", dict = DICTPATH, hmm = HMMPATH,
   }
   jiebapath <- find.package("jiebaR")
   if(!file.exists(file.path(jiebapath,"dict","jieba.dict.utf8"))){
-    unzip(file.path(jiebapath,"dict","jieba.dict.zip"),exdir =file.path( jiebapath,"dict") )
+    try(unzip(file.path(jiebapath,"dict","jieba.dict.zip"),exdir =file.path( jiebapath,"dict") ) )
   }
   if(!file.exists(file.path(jiebapath,"dict","hmm_model.utf8"))){
-    unzip(file.path(jiebapath,"dict","hmm_model.zip"),exdir =file.path( jiebapath,"dict") )
+    try(unzip(file.path(jiebapath,"dict","hmm_model.zip"),exdir =file.path( jiebapath,"dict") ) )
   }
   if(!file.exists(file.path(jiebapath,"dict","idf.utf8"))){
-    unzip(file.path(jiebapath,"dict","idf.zip"),exdir =file.path( jiebapath,"dict") )
+    try(unzip(file.path(jiebapath,"dict","idf.zip"),exdir =file.path( jiebapath,"dict") ) )
   }
   result = new.env(parent = emptyenv())
   
   switch(type, 
            mp      = {
            worker  = new(mpseg, dict, user)
-           private = list(dict = dict,user = user)
+           private = list(dict = dict,user = user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","mpseg")
          }, 
          
            mix     = {
            worker  = new(mixseg, dict, hmm, user)
-           private = list(dict = dict,hmm = hmm,user = user)
+           private = list(dict = dict,hmm = hmm,user = user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","mixseg")
          },
            hmm     = {
            worker  = new(hmmseg, hmm)
-           private = list(hmm = hmm)
+           private = list(hmm = hmm, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","hmmseg")
          },
            query   = {
            worker  = new(queryseg, dict,hmm,qmax)
-           private = list(dict = dict,hmm = hmm,max_word_lenght = qmax)
+           private = list(dict = dict,hmm = hmm,max_word_lenght = qmax, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            
            class(result) <- c("jiebar","segment","queryseg")
          },
           simhash  = {
            worker  = new(sim, dict,hmm,idf,stop_word)
-           private = list(dict=dict,hmm=hmm,idf=idf,stop_word=stop_word)
+           private = list(dict=dict,hmm=hmm,idf=idf,stop_word=stop_word, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
-           class(result) <- c("jiebar","simhash")
+           class(result) <- c("jiebar","nonsegment","simhash")
            result$topn = topn
          },
          keywords  = {
            worker  =  new(keyword,topn, dict,hmm,idf,stop_word)
-           private = list(top_n_word=topn,dict=dict,hmm=hmm,idf=idf,stop_word=stop_word)
+           private = list(top_n_word=topn,dict=dict,hmm=hmm,idf=idf,stop_word=stop_word, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
-           class(result) <- c("jiebar","keywords")
+           class(result) <- c("jiebar","nonsegment","keywords")
          },
            tag     = {
            worker  =  new(tagger, dict,hmm,user)
-           private = list(dict=dict,hmm=hmm,user=user)
+           private = list(dict=dict,hmm=hmm,user=user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
-           class(result) <- c("jiebar","tagger")         
+           class(result) <- c("jiebar","nonsegment","tagger")         
          })
   result
 }

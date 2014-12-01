@@ -19,7 +19,10 @@
 #' keys <= "words of fun"}
 #' @export
 keywords <- function(code, jiebar) {
-  
+  stopifnot("keywords" %in% class(jiebar))
+  if(jiebar$PrivateVarible$timestamp != TIMESTAMP){
+    stop("Please create a new worker after jiebaR is reloaded.")
+  }
   if (!is.character(code) || length(code) != 1) 
     stop("Argument 'code' must be an string.")
   

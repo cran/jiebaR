@@ -24,9 +24,11 @@ print.inv<-function(x, ...){
     return(xx)
   }
   else return(segment(code, jiebar))
-
-
 }
+
+#' @rdname less-than-equals-.segment
+#' @export
+`[.segment`<- `<=.segment`
 
 #' Keywords symbol
 #' 
@@ -44,6 +46,10 @@ print.inv<-function(x, ...){
   keywords(code, jiebar)
 }
 
+#' @rdname less-than-equals-.keywords
+#' @export
+`[.keywords`<- `<=.keywords`
+
 #' Simhash symbol
 #' 
 #' Simhash symbol to compute simhash.
@@ -60,6 +66,10 @@ print.inv<-function(x, ...){
   simhash(code, jiebar)
 }
 
+#' @rdname less-than-equals-.simhash
+#' @export
+`[.simhash`<- `<=.simhash`
+
 #' Tagger symbol
 #' 
 #' Tagger symbol to tag words.
@@ -74,28 +84,14 @@ print.inv<-function(x, ...){
 #' @export
 `<=.tagger`<-function(jiebar, code){
   if(file.exists(code) && jiebar$write == T) {
-    tag(code, jiebar)
+    tagging(code, jiebar)
     xx <- NA
     class(xx) = "inv"
     return(xx)
   }
-  else return(tag(code, jiebar))
+  else return(tagging(code, jiebar))
 }
 
-#' Distance symbol
-#' 
-#' Distance symbol to compute distance.  This symbol is deprecated, and
-#' please use \code{\link{distance}} instead.
-#' @param jiebar jiebaR Worker.
-#' @param formula  Two Chinese sentence or the path of text file. 
-#' @author Qin Wenfeng <\url{http://qinwenfeng.com}>
-#' @seealso \code{\link{distance}}
-#' @examples 
-#' \donttest{
-#' test1 = worker("simhash",topn=1)
-#' test1 == ( "hello world" ~ "hello world")}
+#' @rdname less-than-equals-.tagger
 #' @export
-`==.simhash` <- function(jiebar,formula){
-  warning("==.simhash() was deprecated. Please use distance() instead.\n")
-  distance(formula[[2]], formula[[3]], jiebar)
-}
+`[.tagger`<- `<=.tagger`

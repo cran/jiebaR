@@ -21,8 +21,11 @@
 #' }
 #' @author Qin Wenfeng
 #' @export
-tag<- function(code, jiebar) {
-  
+tagging<- function(code, jiebar) {
+  stopifnot("tagger" %in% class(jiebar))
+  if(jiebar$PrivateVarible$timestamp != TIMESTAMP){
+    stop("Please create a new worker after jiebaR is reloaded.")
+  }
   if (!is.character(code) || length(code) != 1) 
     stop("Argument 'code' must be an string.")
   
@@ -54,6 +57,14 @@ tag<- function(code, jiebar) {
          FILESMODE = FILESMODE)
   }
 }
+
+#' @rdname tagging
+#' @export
+tag <- function(code, jiebar){
+  warning("The tag() function is deprecated for shiny package. Please use tagging() instead.")
+  tagging(code, jiebar)
+}
+  
 
 tagl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILESMODE) {
   
@@ -136,7 +147,7 @@ tagw <- function(code, jiebar,  symbol, FILESMODE) {
   if (symbol == F) {
     code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
   } 
-  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
+#  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
   
   if(FILESMODE==T ){
     result <- jiebar$worker$file(code)
@@ -145,7 +156,7 @@ tagw <- function(code, jiebar,  symbol, FILESMODE) {
   }
   
   if (symbol == F && FILESMODE  ==F) {
-    result <- grep("[^[:space:]]", result, value = T)
+    result = result[ result != " "]
   }
   
   if (.Platform$OS.type == "windows") {

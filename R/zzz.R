@@ -27,10 +27,14 @@ IDFPATH<-NULL
 #' @export
 STOPPATH<-NULL
 
+TIMESTAMP<-NULL
+
 .onLoad <- function(libname, pkgname) {
 #     if (.Platform$OS.type == "windows") {
 #       Sys.setlocale( locale = "English")
 #     }
+  
+    assign(x = "TIMESTAMP",  as.numeric(Sys.time()),asNamespace('jiebaR'))
   
     assign(x = "DICTPATH", file.path(find.package("jiebaR"),"dict","jieba.dict.utf8"),asNamespace('jiebaR'))
     assign(x = "HMMPATH",  file.path(find.package("jiebaR"),"dict","hmm_model.utf8"),asNamespace('jiebaR'))
@@ -49,6 +53,14 @@ setLoadAction(
     loadModule("mod_tag", TRUE)
     loadModule("mod_key", TRUE)
     loadModule("mod_sim", TRUE)
-    ###Loading DICTPATH when package loaded.
-
+    ###Loading DICTPATH when package loaded.    
    })
+
+.onDetach<- function(libpath) {
+  #     if (.Platform$OS.type == "windows") {
+  #       Sys.setlocale( locale = "English")
+  #     }
+  if(exists("quick_worker",envir = .GlobalEnv,,inherits = FALSE )) rm("quick_worker",envir = .GlobalEnv)
+  if(exists("qseg",envir = .GlobalEnv,,inherits = FALSE )) rm("qseg",envir = .GlobalEnv)
+  
+}
