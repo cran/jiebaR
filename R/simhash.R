@@ -12,7 +12,7 @@
 #' @references MS Charikar - Similarity Estimation Techniques from Rounding Algorithms
 #' @author Qin Wenfeng
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' ### Simhash
 #' words = "hello world"
 #' simhasher = worker("simhash",topn=1)
@@ -66,17 +66,18 @@ simhashl <- function(code, jiebar, encoding) {
 simhashw <- function(code, jiebar) {
   
   if (jiebar$symbol == F) {
-    code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
+    code <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", code)
   } 
-  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
+#  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
   
-  result <- jiebar$worker$simhash(code,jiebar$topn)
+  result <- sim_sim(code, jiebar$topn, jiebar$worker)
   
   if (.Platform$OS.type == "windows") {
     Encoding(result$keyword) <- "UTF-8"
   }
   result
 } 
+
 #' Hamming distance of words
 #' 
 #' The function uses Simhash worker to do keyword extraction and find 
@@ -90,7 +91,7 @@ simhashw <- function(code, jiebar) {
 #' @seealso \code{\link{worker}} 
 #' @references \url{http://en.wikipedia.org/wiki/Hamming_distance}
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' ### Simhash
 #' words = "hello world"
 #' simhasher = worker("simhash", topn = 1)
@@ -125,7 +126,7 @@ distance <- function(codel,coder,jiebar){
       coder<-enc2utf8(coder)
     }
   }
-  result <- jiebar$worker$distance(codel,coder,jiebar$topn)
+  result <- sim_distance(codel, coder, jiebar$topn, jiebar$worker)
   if (.Platform$OS.type == "windows") {
     Encoding(result$rhs) <- "UTF-8"
     Encoding(result$lhs) <- "UTF-8"
@@ -147,7 +148,7 @@ distancel <- function(code, jiebar, encoding) {
         tmp.lines <- iconv(tmp.lines,encoding , "UTF-8")
       } 
       if (jiebar$symbol == F) {
-        tmp.lines <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", tmp.lines)
+        tmp.lines <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", tmp.lines)
       } 
       tmp.lines <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", tmp.lines))
       

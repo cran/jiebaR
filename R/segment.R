@@ -109,6 +109,7 @@ cutl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
     })
     OUT <- TRUE
     cat(paste("Output file: ", output, "\n"))
+    return(output) 
     
   } else{
     result<-c()
@@ -143,10 +144,15 @@ cutl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
 cutw <- function(code, jiebar,  symbol, FILESMODE) {
   
   if (symbol == F) {
-    code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
+    code <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", code)
   } 
 #  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
-  result <- jiebar$worker$cut(code)
+  result <- switch(class(jiebar)[3],
+                   mixseg = mix_cut(code, jiebar$worker),
+                   mpseg = mp_cut(code, jiebar$worker),
+                   hmmseg = hmm_cut(code, jiebar$worker),
+                   queryseg = query_cut(code, jiebar$worker)
+                   )
   if (symbol == F) {
     result = result[ result != " "]
   }

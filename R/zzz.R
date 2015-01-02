@@ -1,6 +1,6 @@
 ##' @useDynLib jiebaR
 ##' @import Rcpp
-##' @import methods
+##' @import jiebaRD
 NULL 
 
 #' The path of dictionary
@@ -36,25 +36,25 @@ TIMESTAMP<-NULL
   
     assign(x = "TIMESTAMP",  as.numeric(Sys.time()),asNamespace('jiebaR'))
   
-    assign(x = "DICTPATH", file.path(find.package("jiebaR"),"dict","jieba.dict.utf8"),asNamespace('jiebaR'))
-    assign(x = "HMMPATH",  file.path(find.package("jiebaR"),"dict","hmm_model.utf8"),asNamespace('jiebaR'))
-    assign(x = "USERPATH", file.path(find.package("jiebaR"),"dict","user.dict.utf8"),asNamespace('jiebaR'))
-    assign(x = "STOPPATH", file.path(find.package("jiebaR"),"dict","stop_words.utf8"),asNamespace('jiebaR'))
-    assign(x = "IDFPATH",  file.path(find.package("jiebaR"),"dict","idf.utf8"),asNamespace('jiebaR'))
+    assign(x = "DICTPATH", file.path(find.package("jiebaRD"),"dict","jieba.dict.utf8"),asNamespace('jiebaR'))
+    assign(x = "HMMPATH",  file.path(find.package("jiebaRD"),"dict","hmm_model.utf8"),asNamespace('jiebaR'))
+    assign(x = "USERPATH", file.path(find.package("jiebaRD"),"dict","user.dict.utf8"),asNamespace('jiebaR'))
+    assign(x = "STOPPATH", file.path(find.package("jiebaRD"),"dict","stop_words.utf8"),asNamespace('jiebaR'))
+    assign(x = "IDFPATH",  file.path(find.package("jiebaRD"),"dict","idf.utf8"),asNamespace('jiebaR'))
 
 }
 
-setLoadAction(
-  function(ns){ 
-    loadModule("mod_mpseg", TRUE)
-    loadModule("mod_mixseg", TRUE)
-    loadModule("mod_query", TRUE)
-    loadModule("mod_hmmseg", TRUE)
-    loadModule("mod_tag", TRUE)
-    loadModule("mod_key", TRUE)
-    loadModule("mod_sim", TRUE)
-    ###Loading DICTPATH when package loaded.    
-   })
+# setLoadAction(
+#   function(ns){ 
+# #     loadModule("mod_mpseg", TRUE)
+# #     loadModule("mod_mixseg", TRUE)
+# #     loadModule("mod_query", TRUE)
+# #     loadModule("mod_hmmseg", TRUE)
+# #     loadModule("mod_tag", TRUE)
+# #     loadModule("mod_key", TRUE)
+# #     loadModule("mod_sim", TRUE)
+#     ###Loading DICTPATH when package loaded.    
+#    })
 
 .onDetach<- function(libpath) {
   #     if (.Platform$OS.type == "windows") {

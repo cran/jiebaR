@@ -13,7 +13,7 @@
 #' @references \url{http://en.wikipedia.org/wiki/Tf-idf}
 #' @author Qin Wenfeng
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' ### Keyword Extraction
 #' keys = worker("keywords", topn = 1)
 #' keys <= "words of fun"}
@@ -69,11 +69,11 @@ keyl <- function(code, jiebar, encoding) {
 keyw <- function(code, jiebar) {
   
   if (jiebar$symbol == F) {
-    code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
+    code <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", code)
   } 
-  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
+  # code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
 
-    result <- jiebar$worker$tag(code)
+    result <- key_tag(code,jiebar$worker)
   
   if (.Platform$OS.type == "windows") {
     Encoding(result)<-"UTF-8"

@@ -105,7 +105,7 @@
 #' 
 #' @examples 
 #' ### Note: Can not display Chinese character on Windows here.
-#' \donttest{
+#' \dontrun{
 #' words = "hello world"
 #' test1 = worker()
 #' test1
@@ -124,7 +124,7 @@
 #' engine3 = worker(type = "mix", dict = "dict_path",symbol = T)
 #' engine3 <= "./temp.txt"
 #'  }
-#'  \donttest{
+#'  \dontrun{
 #' keys = worker("keywords", topn = 1)
 #' keys <= words
 #' tagger = worker("tag")
@@ -140,7 +140,7 @@ worker <- function(type = "mix", dict = DICTPATH, hmm = HMMPATH,
   if(!any(type == c("mix","mp","hmm","query","simhash","keywords","tag"))){
     stop("Unkown worker type")
   }
-  jiebapath <- find.package("jiebaR")
+  jiebapath <- find.package("jiebaRD")
   if(!file.exists(file.path(jiebapath,"dict","jieba.dict.utf8"))){
     try(unzip(file.path(jiebapath,"dict","jieba.dict.zip"),exdir =file.path( jiebapath,"dict") ) )
   }
@@ -154,46 +154,46 @@ worker <- function(type = "mix", dict = DICTPATH, hmm = HMMPATH,
   
   switch(type, 
            mp      = {
-           worker  = new(mpseg, dict, user)
+           worker  = mp_ptr(dict, user)
            private = list(dict = dict,user = user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","mpseg")
          }, 
          
            mix     = {
-           worker  = new(mixseg, dict, hmm, user)
+           worker  = mix_ptr(dict, hmm, user)
            private = list(dict = dict,hmm = hmm,user = user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","mixseg")
          },
            hmm     = {
-           worker  = new(hmmseg, hmm)
+           worker  = hmm_ptr(hmm)
            private = list(hmm = hmm, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","segment","hmmseg")
          },
            query   = {
-           worker  = new(queryseg, dict,hmm,qmax)
+           worker  = query_ptr(dict,hmm,qmax)
            private = list(dict = dict,hmm = hmm,max_word_lenght = qmax, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            
            class(result) <- c("jiebar","segment","queryseg")
          },
           simhash  = {
-           worker  = new(sim, dict,hmm,idf,stop_word)
+           worker  = sim_ptr(dict,hmm,idf,stop_word)
            private = list(dict=dict,hmm=hmm,idf=idf,stop_word=stop_word, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","nonsegment","simhash")
            result$topn = topn
          },
          keywords  = {
-           worker  =  new(keyword,topn, dict,hmm,idf,stop_word)
+           worker  =  key_ptr(topn, dict,hmm,idf,stop_word)
            private = list(top_n_word=topn,dict=dict,hmm=hmm,idf=idf,stop_word=stop_word, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","nonsegment","keywords")
          },
            tag     = {
-           worker  =  new(tagger, dict,hmm,user)
+           worker  =  tag_ptr(dict,hmm,user)
            private = list(dict=dict,hmm=hmm,user=user, timestamp = TIMESTAMP)
            assignjieba(worker,detect,encoding,symbol,lines,output,write,private,result)
            class(result) <- c("jiebar","nonsegment","tagger")         

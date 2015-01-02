@@ -12,7 +12,7 @@
 #' @param jiebar jiebaR Worker
 #' @references  The ictclas speech tag : \url{http://t.cn/8FdDD3I}
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' words = "hello world"
 #' 
 #' ### Speech Tagging 
@@ -109,6 +109,7 @@ tagl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
     })
     OUT <- TRUE
     cat(paste("Output file: ", output, "\n"))
+    return(output) 
     
   } else{
     result<-c()
@@ -145,14 +146,14 @@ tagl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
 tagw <- function(code, jiebar,  symbol, FILESMODE) {
   
   if (symbol == F) {
-    code <- gsub("[^\u4e00-\u9fa5a-zA-Z0-9]", " ", code)
+    code <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", code)
   } 
 #  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
   
   if(FILESMODE==T ){
-    result <- jiebar$worker$file(code)
+    result <- tag_file(code, jiebar$worker)
   } else{
-    result <- jiebar$worker$tag(code)
+    result <- tag_tag(code, jiebar$worker)
   }
   
   if (symbol == F && FILESMODE  ==F) {

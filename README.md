@@ -4,10 +4,12 @@ Linux : [![Build Status](https://travis-ci.org/qinwf/jiebaR.svg?branch=master)](
 
 ["结巴"中文分词]的R语言版本，支持最大概率法（Maximum Probability），隐式马尔科夫模型（Hidden Markov Model），索引模型（QuerySegment），混合模型（MixSegment），共四种分词模式，同时有词性标注，关键词提取，文本Simhash相似度比较等功能。项目使用了[Rcpp]和[CppJieba]进行开发。
 
+你还可以试试支持中文编程的 Julia 分词 [Jieba.jl](https://github.com/qinwf/Jieba.jl)。
+
 ## 特性
 
 + 支持 Windows，Linux，Mac 操作系统。
-+ 通过Rcpp Modules实现同时加载多个分词系统,可以分别使用不同的分词模式和词库。
++ 通过 Rcpp 实现同时加载多个分词系统,可以分别使用不同的分词模式和词库。
 + 支持多种分词模式、中文姓名识别、关键词提取、词性标注以及文本Simhash相似度比较等功能。
 + 支持加载自定义用户词库，设置词频、词性。
 + 同时支持简体中文、繁体中文分词。
@@ -17,12 +19,11 @@ Linux : [![Build Status](https://travis-ci.org/qinwf/jiebaR.svg?branch=master)](
 + 可以通过[Rpy2]，[jvmr]等被其他语言调用。
 + 基于MIT协议。
 
-## CRAN 版更新 v0.3
+## 更新 v0.4
 
-+ 2X 分词速度
-+ 新的`[`分词运算符
-+ 快速模式
-+ 修正特定环境下的编码转换问题
++ 重构C++部分代码，移除Rcpp Modules，加快包加载速度和函数调用速度。
++ 优化筛选标点符号的正则表达式，现可识别生僻汉字。
++ 遵守 CRAN 的要求，分离大文件到 jiebaRD 包
 
 ## 安装
 
@@ -37,6 +38,7 @@ library("jiebaR")
 
 ```r
 library(devtools)
+install_github("qinwf/jiebaRD")
 install_github("qinwf/jiebaR")
 library("jiebaR")
 ```
@@ -131,10 +133,17 @@ mixseg$detect = F
 可以自定义用户词库，推荐使用[深蓝词库转换]构建分词词库，它可以快速地将搜狗细胞词库等输入法词库转换为jiebaR的词库格式。
 
 ```r
-show_dictpath()  ### 显示词典路径
-edit_dict()      ### 编辑用户词典
-?edit_dict()     ### 打开帮助系统
+show_dictpath()     ### 显示词典路径
+edit_dict("user")   ### 编辑用户词典
+?edit_dict()        ### 打开帮助系统
 ```
+
+系统词典共有三列，第一列为词项，第二列为词频，第三列为词性标记。
+
+用户词典有两列，第一列为词项，第二列为词性标记。用户词库默认词频为系统词库中的最大词频，如需自定义词频率，可将新词添加入系统词库中。
+
+词典中的词性标记采用ictclas的标记方法。
+
 
 ### 快速模式
 
@@ -267,7 +276,7 @@ types of segmentation modes: Maximum Probability, Hidden Markov Model, Query Seg
 ## Features
 
 + Support Windows, Linux,and Mac.
-+ Using Rcpp Modules to load different segmentation worker at the same time.
++ Using Rcpp to load different segmentation worker at the same time.
 + Support Chinese text segmentation, keyword extraction, speech tagging and simhash computation.
 + Custom dictionary path.
 + Support simplified Chinese and traditional Chinese.
@@ -375,10 +384,17 @@ cutter$detect = F
 Users can specify their own custom dictionary to be included in the jiebaR default dictionary. jiebaR is able to identify new words, but adding your own new words can ensure a higher accuracy. [imewlconverter] is a good tools for dictionary construction.
 
 ```r
-ShowDictPath()  ### Show path
-EditDict()      ### Edit user dictionary
-?EditDict()     ### For more information
+show_dictpath()  ### Show path
+edit_dict()      ### Edit user dictionary
+?edit_dict()     ### For more information
 ```
+
+There are three column in the system dictionary. The first column is the word, and the second column is the frequency of word. The third column is 
+speech tag using labels compatible with ictclas.
+ 
+There are two column in the user dictionary. The first column is the word, 
+and the second column is speech tag using labels compatible with ictclas.
+Frequency of every word in the user dictionary will be the maximum number of the system dictionary. If you want to provide the frequency for a new word, you can put it in the system dictionary.
 
 ### Speech Tagging
 Speech Tagging function `<=.tagger` or `tag` uses speech tagging worker to cut word and tags each word after segmentation, using labels compatible with ictclas.  `dict` `hmm` and `user` should be provided when initializing `jiebaR` worker.
