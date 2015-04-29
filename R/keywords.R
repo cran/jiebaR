@@ -26,7 +26,7 @@ keywords <- function(code, jiebar) {
   if (!is.character(code) || length(code) != 1) 
     stop("Argument 'code' must be an string.")
   
-  if (file.exists(code)) {
+  if (file.exists(code) && jiebar$write != "NOFILE") {
     encoding <- jiebar$encoding
     
     if(jiebar$detect == T)  encoding <- filecoding(code)
@@ -80,3 +80,22 @@ keyw <- function(code, jiebar) {
   }
   result
 } 
+
+#' @rdname keywords
+#' @export
+vector_keywords <- function(code,jiebar){
+  stopifnot("keywords" %in% class(jiebar))
+  if(jiebar$PrivateVarible$timestamp != TIMESTAMP){
+    stop("Please create a new worker after jiebaR is reloaded.")
+  }
+  if (!is.character(code)) 
+    stop("Argument 'code' must be an string.")
+  if (.Platform$OS.type == "windows") {
+    code = enc2utf8(code)
+  }
+  result = key_keys(code,jiebar$worker)
+  if (.Platform$OS.type == "windows") {
+    Encoding(result)<-"UTF-8"
+  }
+  result
+}

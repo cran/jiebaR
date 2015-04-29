@@ -20,7 +20,7 @@ ShowDictPath<-function(){
 #' Edit default user dictionary
 #' 
 #' Edit the default user dictionary. 
-#' @references  The ictclas speech tag : \url{http://t.cn/8FdDD3I}
+#' @references  The ictclas speech tag : \url{http://t.cn/RAEj7e1}
 #' @details 
 #' There are three column in the system dictionary. The first column is the word, 
 #' and the second column is the frequency of word. The third column is 
@@ -50,9 +50,11 @@ edit_dict<-function(name = "user"){
                     
                     stop_word = "stop_words.utf8"
   )
-  file.show(file.path(path.package("jiebaRD"),"dict",dictname))
   if (.Platform$OS.type == "windows") {
+    file.show(file.path(path.package("jiebaRD"),"dict",dictname))
     warning("You should save the dictionary without BOM on Windows")
+  } else{
+    file.edit(file.path(path.package("jiebaRD"),"dict",dictname))
   }
 }
 
