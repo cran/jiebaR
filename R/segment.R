@@ -51,7 +51,8 @@ segment <- function(code, jiebar) {
     if(is.null(jiebar$output)){
       basenames <- gsub("\\.[^\\.]*$", "", code[1])
       extnames  <- gsub(basenames, "", code[1], fixed = TRUE)
-      output    <- paste(basenames, ".segment", as.numeric(Sys.time()), extnames, sep = "")
+      times_char = gsub(" |:","_",as.character(Sys.time()))
+      output    <- paste(basenames, ".segment.", times_char, extnames, sep = "")
     } else {
       output<-jiebar$output
     }
@@ -172,11 +173,7 @@ cutl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
 
 cutw <- function(code, jiebar,  symbol, FILESMODE) {
   
-  if (symbol == F) {
-    code <- gsub("[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]", " ", code)
-  }
-  #  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
-  
+
   if(jiebar$bylines == FALSE){
     result = engine_cut(code,jiebar)
     if (symbol == F) {
@@ -184,6 +181,9 @@ cutw <- function(code, jiebar,  symbol, FILESMODE) {
     }
     if (.Platform$OS.type == "windows") {
       Encoding(result)<-"UTF-8"
+    }
+    if (symbol == F) {
+      result <- grep("(*UCP)^[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]*$", result, perl = TRUE,value = TRUE,invert = T)
     }
   } else {
 
@@ -197,10 +197,17 @@ cutw <- function(code, jiebar,  symbol, FILESMODE) {
       if (.Platform$OS.type == "windows") {
         Encoding(tmp_result)<-"UTF-8"
       }
+      if (symbol == F) {
+        tmp_result <- grep("(*UCP)^[^\u2e80-\u3000\u3021-\ufe4fa-zA-Z0-9]*$", tmp_result, perl = TRUE,value = TRUE,invert = T)
+      }
+      #  code <- gsub("^\\s+|\\s+$", "", gsub("\\s+", " ", code))
       result[[num]] = tmp_result
     }
   }
-  
+
+  # if(!is.null(jiebar$PrivateVarible$loaded_stop_words)){
+  #   result = filter_segment(result,jiebar$PrivateVarible$loaded_stop_words)
+  # }
   return(result)
 }
 

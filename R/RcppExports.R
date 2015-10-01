@@ -12,40 +12,40 @@ filecoding <- function(file) {
     .Call('jiebaR_filecoding', PACKAGE = 'jiebaR', file)
 }
 
-mp_ptr <- function(dict, user) {
-    .Call('jiebaR_mp_ptr', PACKAGE = 'jiebaR', dict, user)
+mp_ptr <- function(dict, user, stop) {
+    .Call('jiebaR_mp_ptr', PACKAGE = 'jiebaR', dict, user, stop)
 }
 
 mp_cut <- function(x, cutter) {
     .Call('jiebaR_mp_cut', PACKAGE = 'jiebaR', x, cutter)
 }
 
-mix_ptr <- function(dict, model, user) {
-    .Call('jiebaR_mix_ptr', PACKAGE = 'jiebaR', dict, model, user)
+mix_ptr <- function(dict, model, user, stop) {
+    .Call('jiebaR_mix_ptr', PACKAGE = 'jiebaR', dict, model, user, stop)
 }
 
 mix_cut <- function(x, cutter) {
     .Call('jiebaR_mix_cut', PACKAGE = 'jiebaR', x, cutter)
 }
 
-query_ptr <- function(dict, model, n) {
-    .Call('jiebaR_query_ptr', PACKAGE = 'jiebaR', dict, model, n)
+query_ptr <- function(dict, model, n, stop) {
+    .Call('jiebaR_query_ptr', PACKAGE = 'jiebaR', dict, model, n, stop)
 }
 
 query_cut <- function(x, cutter) {
     .Call('jiebaR_query_cut', PACKAGE = 'jiebaR', x, cutter)
 }
 
-hmm_ptr <- function(model) {
-    .Call('jiebaR_hmm_ptr', PACKAGE = 'jiebaR', model)
+hmm_ptr <- function(model, stop) {
+    .Call('jiebaR_hmm_ptr', PACKAGE = 'jiebaR', model, stop)
 }
 
 hmm_cut <- function(x, cutter) {
     .Call('jiebaR_hmm_cut', PACKAGE = 'jiebaR', x, cutter)
 }
 
-tag_ptr <- function(dict, model, user) {
-    .Call('jiebaR_tag_ptr', PACKAGE = 'jiebaR', dict, model, user)
+tag_ptr <- function(dict, model, user, stop) {
+    .Call('jiebaR_tag_ptr', PACKAGE = 'jiebaR', dict, model, user, stop)
 }
 
 tag_tag <- function(x, cutter) {
@@ -82,5 +82,9 @@ sim_sim <- function(code, topn, cutter) {
 
 sim_distance <- function(lhs, rhs, topn, cutter) {
     .Call('jiebaR_sim_distance', PACKAGE = 'jiebaR', lhs, rhs, topn, cutter)
+}
+
+words_freq <- function(x) {
+    .Call('jiebaR_words_freq', PACKAGE = 'jiebaR', x)
 }
 

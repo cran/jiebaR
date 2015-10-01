@@ -33,90 +33,59 @@ inline string int64tos(uint64_t i)  // convert int to string
     return s.str();
 }
 
-class mpseg
+inline void _loadStopWordDict(const string &filePath,unordered_set<string>& _stopWords)
 {
+    ifstream ifs(filePath.c_str());
+    if (!ifs)
+    {
+        stop("Open Failed Stop Word Dict segtype.hpp : 40 ");
+    }
+    string line ;
+    while (getline(ifs, line))
+    {
+        _stopWords.insert(line);
+    }
+    if (!(_stopWords.size()))
+    {
+        stop("_stopWords.size() == 0  segtype.hpp : 51 ");
+    }
+
+}
+
+inline void filter_stopwords(vector<string>& res,const vector<string>& words,const unordered_set<string>& stopWords){
+	for(vector<string>::const_iterator it= words.begin();it != words.end(); it++){
+        if (stopWords.end() == stopWords.find(*it))
+        {
+            res.push_back(*it);
+        }
+	}
+}
+
+template <class T> class Seg {
 public:
-  const char *const dict_path;
-  const char *const user_path;
-  MPSegment mpsegment;
-  mpseg(CharacterVector dict, CharacterVector user) :
-    dict_path(dict[0]), user_path(user[0]), mpsegment(dict_path, user_path)
-  {
-  }
-  ~mpseg() {};
+  unordered_set<string> stopWords;
+  T cutter;
   
-  CharacterVector cut(CharacterVector x)
+  Seg() = delete;
+  Seg(CharacterVector& dict, CharacterVector& model, CharacterVector& user,Nullable<CharacterVector> stop);
+  Seg(CharacterVector& dict, CharacterVector& user,Nullable<CharacterVector> stop);
+  Seg(CharacterVector& dict, CharacterVector& model, int n,Nullable<CharacterVector> stop);
+  Seg(CharacterVector& model,Nullable<CharacterVector> stop);
+  ~Seg(){};
+  
+  CharacterVector cut(CharacterVector& x)
   {
     const char *const test_lines = x[0];
     vector<string> words;
-    mpsegment.cut(test_lines, words);
-    return wrap(words);
-  }
-};
-
-
-class mixseg
-{
-public:
-  const char *const dict_path;
-  const char *const model_path;
-  const char *const user_path;
-  MixSegment mixsegment;
-  mixseg(CharacterVector dict, CharacterVector model, CharacterVector user) :
-    dict_path(dict[0]), model_path(model[0]), user_path(user[0]), mixsegment(dict_path, model_path, user_path)
-  {
-  }
-  ~mixseg() {};
-  
-  CharacterVector cut(CharacterVector x)
-  {
-    const char *const test_lines = x[0];
-    vector<string> words;
-    mixsegment.cut(test_lines, words);
-    return wrap(words);
-  }
-};
-
-
-class queryseg
-{
-public:
-  const char *const dict_path;
-  const char *const model_path;
-  QuerySegment querysegment;
-  queryseg(CharacterVector dict, CharacterVector model, int n) :
-    dict_path(dict[0]), model_path(model[0]), querysegment(dict_path, model_path, n)
-  {
-  }
-  ~queryseg() {};
-  
-  CharacterVector cut(CharacterVector x)
-  {
-    const char *const test_lines = x[0];
-    vector<string> words;
-    querysegment.cut(test_lines, words);
-    return wrap(words);
-  }
-};
-
-
-class hmmseg
-{
-public:
-  const char *const model_path;
-  HMMSegment hmmsegment;
-  hmmseg(CharacterVector model) :
-    model_path(model[0]), hmmsegment(model_path)
-  {
-  }
-  ~hmmseg() {};
-  
-  CharacterVector cut(CharacterVector x)
-  {
-    const char *const test_lines = x[0];
-    vector<string> words;
-    hmmsegment.cut(test_lines, words);
-    return wrap(words);
+    cutter.cut(test_lines, words);
+    if(stopWords.size()==0){
+      return wrap(words);
+    } else{
+      vector<string> res;
+      res.reserve(words.size());
+      filter_stopwords(res, words,stopWords);
+      return wrap(res);
+    }
   }
 };
 
@@ -128,43 +97,85 @@ public:
   const char *const dict_path;
   const char *const model_path;
   const char *const user_path;
+
+  unordered_set<string> stopWords;
   PosTagger  taggerseg;
-  tagger(CharacterVector dict, CharacterVector model, CharacterVector user) :
-    dict_path(dict[0]), model_path(model[0]), user_path(user[0]), taggerseg(dict_path, model_path, user_path)
+  tagger(CharacterVector dict, CharacterVector model, CharacterVector user,Nullable<CharacterVector> stop) :
+    dict_path(dict[0]), model_path(model[0]), user_path(user[0]), stopWords(unordered_set<string>()), taggerseg(dict_path, model_path, user_path)
   {
+  	  	  if(!stop.isNull()){
+  	    CharacterVector stop_value = stop.get();
+  	 	  const char *const stop_path = stop_value[0];
+  	 	  _loadStopWordDict(stop_path,stopWords);
+  	 }
   }
   ~tagger() {};
   
-  CharacterVector tag(CharacterVector x)
+  CharacterVector tag(CharacterVector& x)
   {
     const char *const test_lines = x[0];
     vector<pair<string, string> > res;
     taggerseg.tag(test_lines, res);
-    unsigned int it;
-    CharacterVector m(res.size());
-    CharacterVector atb(res.size());
-    for (it = 0; it != res.size(); it++)
-    {
-      m[it] = res[it].first;
-      atb[it] = res[it].second;
+    //unsigned int it;
+    vector<string> m;
+    m.reserve(res.size());
+    vector<string> atb;
+    atb.reserve(res.size());
+
+    if(stopWords.size()>0){
+        for (vector<pair<string, string> >::iterator it = res.begin(); it != res.end(); it++)
+	    {
+	      
+			if (stopWords.end() == stopWords.find((*it).first))
+			{
+	        	m.push_back((*it).first);
+	        	atb.push_back((*it).second);
+			}
+
+	    }	
+    } else {
+    	for (vector<pair<string, string> >::iterator it = res.begin(); it != res.end(); it++)
+	    {
+	        	m.push_back((*it).first);
+	        	atb.push_back((*it).second);
+	    }
     }
-    m.attr("names") = atb;
-    return wrap(m);
+
+    CharacterVector m_cv(m.begin(),m.end());
+    CharacterVector atb_cv(atb.begin(),atb.end()); 
+    m_cv.attr("names") = atb_cv;
+
+    return wrap(m_cv);
   }
   
-  CharacterVector file(CharacterVector x)
+  CharacterVector file(CharacterVector& x)
   {
     const char *const test_lines = x[0];
     vector<pair<string, string> > res;
     taggerseg.tag(test_lines, res);
-    unsigned int it;
+    //unsigned int it;
     vector<string> m;
     m.reserve(res.size()*2);
-    for (it = 0; it != res.size()*2; it=it+2)
-    {
-      m.push_back(res[it/2].first);
-      m.push_back(res[it/2].second);
+
+    if(stopWords.size()>0){
+    	for (vector<pair<string, string> >::iterator it = res.begin(); it != res.end(); it++)
+	    {
+	      
+			if (stopWords.end() == stopWords.find((*it).first))
+			{
+			      m.push_back((*it).first);
+			      m.push_back((*it).second);
+			}
+
+	    }
+    }else{
+    	for (vector<pair<string, string> >::iterator it = res.begin(); it != res.end(); it++)
+	    {
+			m.push_back((*it).first);
+			m.push_back((*it).second);
+	    }
     }
+
     
     return wrap(m);
   }
@@ -191,24 +202,27 @@ public:
   }
   ~keyword() {};
   
-  CharacterVector tag(CharacterVector x)
+  CharacterVector tag(CharacterVector& x)
   {
     const char *const test_lines = x[0];
     vector<pair<string, double> > res;
     extractor.extract(test_lines, res, topN);
-    unsigned int it;
+    //unsigned int it;
     CharacterVector m(res.size());
     CharacterVector atb(res.size());
-    for (it = 0; it != res.size(); it++)
+    CharacterVector::iterator m_it = m.begin();
+    CharacterVector::iterator atb_it = atb.begin();
+    for (vector<pair<string, double> >::iterator it = res.begin(); it != res.end(); it++)
     {
-      m[it] = res[it].first;
-      atb[it] = itos(res[it].second);
+      *m_it = (*it).first; m_it++;
+      *atb_it = itos((*it).second); atb_it++;
     }
+
     m.attr("names") = atb;
     return wrap(m);
   }
   
-  CharacterVector cut(CharacterVector x)
+  CharacterVector cut(CharacterVector& x)
   {
     const char *const test_lines = x[0];
     vector<string> words;
@@ -220,13 +234,15 @@ public:
   {
     vector<pair<string, double> > res;
     extractor.keys(test_lines, res, topN);
-    unsigned int it;
+    //unsigned int it;
     CharacterVector m(res.size());
     CharacterVector atb(res.size());
-    for (it = 0; it != res.size(); it++)
+    CharacterVector::iterator m_it = m.begin();
+    CharacterVector::iterator atb_it = atb.begin();
+    for (vector<pair<string, double> >::iterator it = res.begin(); it != res.end(); it++)
     {
-      m[it] = res[it].first;
-      atb[it] = itos(res[it].second);
+      *m_it = (*it).first; m_it++;
+      *atb_it = itos((*it).second); atb_it++;
     }
     m.attr("names") = atb;
     return wrap(m);
@@ -250,7 +266,7 @@ public:
   idf_path(idf[0]), hash(dict_path, model_path, idf_path, stop_path) {}
   ~sim() {};
   
-  List simhash(CharacterVector code, int topn)
+  List simhash(CharacterVector& code, int topn)
   {
     const char *const code_path = code[0];
     vector<pair<string, double> > lhsword;
@@ -258,11 +274,13 @@ public:
     hash.make(code_path, topn, hashres, lhsword);
     CharacterVector lhsm(lhsword.size());
     CharacterVector lhsatb(lhsword.size());
-    unsigned int it;
-    for (it = 0; it != lhsword.size(); it++)
+    //unsigned int it;
+    CharacterVector::iterator lhsm_it = lhsm.begin();
+    CharacterVector::iterator lhsatb_it = lhsatb.begin();
+    for (vector<pair<string, double> >::iterator it = lhsword.begin(); it != lhsword.end(); it++)
     {
-      lhsm[it] = lhsword[it].first;
-      lhsatb[it] = itos(lhsword[it].second);
+      *lhsm_it = (*it).first; lhsm_it++;
+      *lhsatb_it = itos((*it).second); lhsatb_it++;
     }
     lhsm.attr("names") = lhsatb;
     CharacterVector hashvec;
@@ -271,7 +289,7 @@ public:
                          Named("keyword") = lhsm);
   }
   
-  List distance(CharacterVector lhs, CharacterVector rhs, int topn)
+  List distance(CharacterVector& lhs, CharacterVector& rhs, int topn)
   {
     uint64_t lhsres;
     uint64_t rhsres;
@@ -283,22 +301,27 @@ public:
     hash.make(rhs_path, topn, rhsres, rhsword);
     CharacterVector lhsm(lhsword.size());
     CharacterVector lhsatb(lhsword.size());
-    unsigned int it;
-    for (it = 0; it != lhsword.size(); it++)
+    //unsigned int it;
+    CharacterVector::iterator lhsm_it = lhsm.begin();
+    CharacterVector::iterator lhsatb_it = lhsatb.begin();
+    for (vector<pair<string, double> >::iterator it = lhsword.begin(); it != lhsword.end(); it++)
     {
-      lhsm[it] = lhsword[it].first;
-      lhsatb[it] = itos(lhsword[it].second);
+      *lhsm_it = (*it).first; lhsm_it++;
+      *lhsatb_it = itos((*it).second); lhsatb_it++;
     }
     lhsm.attr("names") = lhsatb;
     
     CharacterVector rhsm(rhsword.size());
     CharacterVector rhsatb(rhsword.size());
-    for (it = 0; it != rhsword.size(); it++)
+    CharacterVector::iterator rhsm_it = rhsm.begin();
+    CharacterVector::iterator rhsatb_it = rhsatb.begin();
+    for (vector<pair<string, double> >::iterator it = rhsword.begin(); it != rhsword.end(); it++)
     {
-      rhsm[it] = rhsword[it].first;
-      rhsatb[it] = itos(rhsword[it].second);
+      *rhsm_it = (*it).first; rhsm_it++;
+      *rhsatb_it = itos((*it).second); rhsatb_it++;
     }
     rhsm.attr("names") = rhsatb;
+
     CharacterVector hashvec;
     hashvec.push_back(int64tos(hash.distances(lhsres, rhsres)));
     return List::create( Named("distance") = hashvec,

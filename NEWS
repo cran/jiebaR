@@ -1,3 +1,13 @@
+Changes in Version 0.6
+=====================================
+
+   o Add: C API
+   o Add: freq() to count word frequency
+   o Fix: filter_segment() may occasionally remove words
+   o Enhencement: filter_segment() now can handle list of vectors of words.
+   o Enhencement: segmentation worker now can remove stop words. The default STOPPATH is not used by default for segmentation worker. 
+   o Enhencement: when symbol = F, 2010-10-13, 10.2 can be identified.
+
 Changes in Version 0.5 (2015-04-29)
 =====================================
 
