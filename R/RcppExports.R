@@ -12,6 +12,18 @@ filecoding <- function(file) {
     .Call('jiebaR_filecoding', PACKAGE = 'jiebaR', file)
 }
 
+get_idf_cpp <- function(x, stop_) {
+    .Call('jiebaR_get_idf_cpp', PACKAGE = 'jiebaR', x, stop_)
+}
+
+get_tuple_list <- function(x, step) {
+    .Call('jiebaR_get_tuple_list', PACKAGE = 'jiebaR', x, step)
+}
+
+get_tuple_vector <- function(x, step) {
+    .Call('jiebaR_get_tuple_vector', PACKAGE = 'jiebaR', x, step)
+}
+
 mp_ptr <- function(dict, user, stop) {
     .Call('jiebaR_mp_ptr', PACKAGE = 'jiebaR', dict, user, stop)
 }
@@ -80,8 +92,20 @@ sim_sim <- function(code, topn, cutter) {
     .Call('jiebaR_sim_sim', PACKAGE = 'jiebaR', code, topn, cutter)
 }
 
+sim_vec <- function(code, topn, cutter) {
+    .Call('jiebaR_sim_vec', PACKAGE = 'jiebaR', code, topn, cutter)
+}
+
 sim_distance <- function(lhs, rhs, topn, cutter) {
     .Call('jiebaR_sim_distance', PACKAGE = 'jiebaR', lhs, rhs, topn, cutter)
+}
+
+sim_distance_vec <- function(lcode, rcode, topn, cutter) {
+    .Call('jiebaR_sim_distance_vec', PACKAGE = 'jiebaR', lcode, rcode, topn, cutter)
+}
+
+u64tobin <- function(x) {
+    .Call('jiebaR_u64tobin', PACKAGE = 'jiebaR', x)
 }
 
 words_freq <- function(x) {

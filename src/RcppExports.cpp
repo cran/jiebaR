@@ -17,6 +17,42 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// get_idf_cpp
+List get_idf_cpp(List x, Nullable<CharacterVector> stop_);
+RcppExport SEXP jiebaR_get_idf_cpp(SEXP xSEXP, SEXP stop_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type stop_(stop_SEXP);
+    __result = Rcpp::wrap(get_idf_cpp(x, stop_));
+    return __result;
+END_RCPP
+}
+// get_tuple_list
+List get_tuple_list(ListOf<CharacterVector> x, unsigned int step);
+RcppExport SEXP jiebaR_get_tuple_list(SEXP xSEXP, SEXP stepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< ListOf<CharacterVector> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type step(stepSEXP);
+    __result = Rcpp::wrap(get_tuple_list(x, step));
+    return __result;
+END_RCPP
+}
+// get_tuple_vector
+List get_tuple_vector(CharacterVector& x, unsigned int step);
+RcppExport SEXP jiebaR_get_tuple_vector(SEXP xSEXP, SEXP stepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type step(stepSEXP);
+    __result = Rcpp::wrap(get_tuple_vector(x, step));
+    return __result;
+END_RCPP
+}
 // mp_ptr
 XPtr<Seg<MPSegment>> mp_ptr(CharacterVector& dict, CharacterVector& user, Nullable<CharacterVector>& stop);
 RcppExport SEXP jiebaR_mp_ptr(SEXP dictSEXP, SEXP userSEXP, SEXP stopSEXP) {
@@ -234,6 +270,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// sim_vec
+List sim_vec(vector<string>& code, int& topn, XPtr<sim> cutter);
+RcppExport SEXP jiebaR_sim_vec(SEXP codeSEXP, SEXP topnSEXP, SEXP cutterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< vector<string>& >::type code(codeSEXP);
+    Rcpp::traits::input_parameter< int& >::type topn(topnSEXP);
+    Rcpp::traits::input_parameter< XPtr<sim> >::type cutter(cutterSEXP);
+    __result = Rcpp::wrap(sim_vec(code, topn, cutter));
+    return __result;
+END_RCPP
+}
 // sim_distance
 List sim_distance(CharacterVector& lhs, CharacterVector& rhs, int& topn, XPtr<sim> cutter);
 RcppExport SEXP jiebaR_sim_distance(SEXP lhsSEXP, SEXP rhsSEXP, SEXP topnSEXP, SEXP cutterSEXP) {
@@ -245,6 +294,31 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int& >::type topn(topnSEXP);
     Rcpp::traits::input_parameter< XPtr<sim> >::type cutter(cutterSEXP);
     __result = Rcpp::wrap(sim_distance(lhs, rhs, topn, cutter));
+    return __result;
+END_RCPP
+}
+// sim_distance_vec
+List sim_distance_vec(vector<string>& lcode, vector<string>& rcode, int& topn, XPtr<sim> cutter);
+RcppExport SEXP jiebaR_sim_distance_vec(SEXP lcodeSEXP, SEXP rcodeSEXP, SEXP topnSEXP, SEXP cutterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< vector<string>& >::type lcode(lcodeSEXP);
+    Rcpp::traits::input_parameter< vector<string>& >::type rcode(rcodeSEXP);
+    Rcpp::traits::input_parameter< int& >::type topn(topnSEXP);
+    Rcpp::traits::input_parameter< XPtr<sim> >::type cutter(cutterSEXP);
+    __result = Rcpp::wrap(sim_distance_vec(lcode, rcode, topn, cutter));
+    return __result;
+END_RCPP
+}
+// u64tobin
+CharacterVector u64tobin(CharacterVector& x);
+RcppExport SEXP jiebaR_u64tobin(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< CharacterVector& >::type x(xSEXP);
+    __result = Rcpp::wrap(u64tobin(x));
     return __result;
 END_RCPP
 }
