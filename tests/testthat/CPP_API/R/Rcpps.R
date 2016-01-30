@@ -56,8 +56,8 @@ tag_file <- function(x, cutter) {
     .Call('api_jiebaR_tag_file', PACKAGE = 'jiebaRapi', x, cutter)
 }
 
-key_ptr <- function(n, dict, model, idf, stop) {
-    .Call('api_jiebaR_key_ptr', PACKAGE = 'jiebaRapi', n, dict, model, idf, stop)
+key_ptr <- function(n, dict, model, idf, stop,user) {
+    .Call('api_jiebaR_key_ptr', PACKAGE = 'jiebaRapi', n, dict, model, idf, stop, user)
 }
 
 key_tag <- function(x, cutter) {
@@ -72,8 +72,8 @@ key_keys <- function(x, cutter) {
     .Call('api_jiebaR_key_keys', PACKAGE = 'jiebaRapi', x, cutter)
 }
 
-sim_ptr <- function(dict, model, idf, stop) {
-    .Call('api_jiebaR_sim_ptr', PACKAGE = 'jiebaRapi', dict, model, idf, stop)
+sim_ptr <- function(dict, model, idf, stop, user) {
+    .Call('api_jiebaR_sim_ptr', PACKAGE = 'jiebaRapi', dict, model, idf, stop, user)
 }
 
 sim_sim <- function(code, topn, cutter) {
@@ -84,3 +84,10 @@ sim_distance <- function(lhs, rhs, topn, cutter) {
     .Call('api_jiebaR_sim_distance', PACKAGE = 'jiebaRapi', lhs, rhs, topn, cutter)
 }
 
+jieba_ptr <- function(dict, model, user, stop) {
+  .Call('api_jiebaR_jiebaclass_ptr', PACKAGE = 'jiebaRapi', dict, model, user, stop)
+}
+
+jieba_mix_cut <- function(x, cutter) {
+  .Call('api_jiebaR_jiebaclass_mix_cut', PACKAGE = 'jiebaRapi', x, cutter)
+}
