@@ -2,11 +2,9 @@
 
 Linux : [![Build Status](https://travis-ci.org/qinwf/jiebaR.svg?branch=master)](https://travis-ci.org/qinwf/jiebaR)　Mac : [![Build Status](https://travis-ci.org/qinwf/jiebaR.svg?branch=osx)](https://travis-ci.org/qinwf/jiebaR)　Win : [![Build status](https://ci.appveyor.com/api/projects/status/k8swxpkue1caiiwi/branch/master?svg=true)](https://ci.appveyor.com/project/qinwf53234/jiebar/branch/master)
 
-["结巴"中文分词]的R语言版本，支持最大概率法（Maximum Probability），隐式马尔科夫模型（Hidden Markov Model），索引模型（QuerySegment），混合模型（MixSegment），共四种分词模式，同时有词性标注，关键词提取，文本Simhash相似度比较等功能。项目使用了[Rcpp]和[CppJieba]进行开发。
+["结巴"中文分词]的R语言版本，支持多种分词模式，同时有词性标注，关键词提取，文本Simhash相似度比较等功能。项目使用了[Rcpp]和[CppJieba]进行开发。
 
 细胞词库转换可以使用 [cidian](https://github.com/qinwf/cidian) 包 ：https://github.com/qinwf/cidian/
-
-你还可以试试支持中文编程的 Julia 分词 [Jieba.jl](https://github.com/qinwf/Jieba.jl)。
 
 ## 特性
 
@@ -36,7 +34,7 @@ cc["这是一个测试"] # or segment("这是一个测试", cc)
 # [1] "这是" "一个" "测试"
 ```
 
-同时还可以通过Github安装[开发版]，建议使用 gcc >= 4.6 编译，Windows需要安装 [Rtools](http://cran.r-project.org/bin/windows/Rtools/) ：
+同时还可以通过Github安装[开发版]，建议使用 gcc >= 4.6 编译，Windows需要安装 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) ：
 
 ```r
 library(devtools)
@@ -89,7 +87,7 @@ Install the latest development version from GitHub:
 devtools::install_github("qinwf/jiebaR")
 ```
 
-Install from [CRAN](http://cran.r-project.org/web/packages/jiebaR/index.html):
+Install from [CRAN](https://cran.r-project.org/package=jiebaR):
 
 ```r
 install.packages("jiebaR")
@@ -98,7 +96,6 @@ install.packages("jiebaR")
 ["结巴"中文分词]:https://github.com/fxsjy/jieba
 [Rcpp]:https://github.com/RcppCore/Rcpp
 [Cppjieba]:https://github.com/yanyiwu/cppjieba
-[Rtools]:http://mirrors.xmu.edu.cn/CRAN/bin/windows/Rtools
 [深蓝词库转换]:https://github.com/studyzy/imewlconverter
 [开发版]:https://ci.appveyor.com/project/qinwf53234/jiebar/branch/master/artifacts
 [Rpy2]:http://rpy.sourceforge.net/
