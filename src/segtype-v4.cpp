@@ -63,6 +63,13 @@ CharacterVector jiebaclass_tag_tag(CharacterVector& x, XPtr<JiebaClass> cutter){
 CharacterVector jiebaclass_tag_file(CharacterVector& x, XPtr<JiebaClass> cutter){
   return wrap(cutter->cut_tag_file(x));
 }
+
+
+// [[Rcpp::export]]
+CharacterVector  jiebaclass_tag_vec(vector<string>& code, XPtr<JiebaClass> cutter){
+  return wrap(cutter->vector_tag(code));
+}
+
 // [[Rcpp::export]]
 SEXP set_query_threshold(size_t num, XPtr<JiebaClass> cutter){
   return wrap(cutter->set_query_threshold(num));
@@ -127,29 +134,3 @@ List sim_distance_vec(vector<string>& lcode,vector<string>& rcode, size_t topn, 
   return cutter->distance_fromvec(lcode,rcode,topn);
 }
 
-// [[Rcpp::export]]
-CharacterVector u64tobin(string x){
-  string res;
-  uint64_t todo = atoi(x.c_str());
-  Simhash::Simhasher::toBinaryString(todo,res);
-  return wrap(res);
-}
-
-// [[Rcpp::export]]
-List get_loc(vector<string>& word){
-  vector<cppjieba::Jieba::LocWord> res;
-  Jieba::Locate(word,res);
-  vector<string> strings;
-  vector<string> begins;
-  vector<string> ends;
-  strings.reserve(word.size());
-  begins.reserve(word.size());
-  ends.reserve(word.size());
-  
-  for(auto it=res.begin(); it!=res.end();it++){
-    strings.push_back(it->word);
-    begins.push_back(int64tos(it->begin));
-    ends.push_back(int64tos(it->end));
-  }
-  return List::create(strings,begins,ends);
-}

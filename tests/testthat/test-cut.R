@@ -27,7 +27,7 @@ test_that("simhash",{
   
   expect_identical(simhasher[words],structure(list(simhash = "3804341492420753273", keyword = structure("hello", .Names = "11.7392")), .Names = c("simhash","keyword")))
   
-  expect_identical(distance("hello world" , "hello world!" , simhasher),structure(list(distance = "0", lhs = structure("hello", .Names = "11.7392"),rhs = structure("hello", .Names = "11.7392")), .Names = c("distance","lhs", "rhs")))
+  expect_identical(distance("hello world" , "hello world!" , simhasher),structure(list(distance = 0L, lhs = structure("hello", .Names = "11.7392"),rhs = structure("hello", .Names = "11.7392")), .Names = c("distance","lhs", "rhs")))
 })
 
 test_that("tagger",{
@@ -44,3 +44,45 @@ test_that("keys",{
   
 })
 
+test_that("tobin", {
+  expect_equal(tobin("200000000000000000"), "0000001011000110100010101111000010111011000101000000000000000000")
+  expect_equal(tobin("2"),"0000000000000000000000000000000000000000000000000000000000000010")
+})
+
+test_that("query_threshold", {
+  cc = worker()
+  expect_warning(query_threshold(cc,1))
+  expect_equal(cc$max_word_length ,1)
+})
+
+test_that("tools",{
+  invisible(show_dictpath())
+})
+
+test_that("get_idf",{
+  res = get_idf(list(c("a","b","c"), c("1","a","b","2")))
+  expect_true(nrow(res) == 2)
+  expect_true(res[res[,1] == "b",]["count"] == 0)
+  expect_true(round(res[res[,1] == "c",]["count"],digits = 2) == 0.69)
+})
+
+test_that("get_tuple",{
+  res = get_tuple(c("sd","sd","sd","rd"),2)
+  expect_true(nrow(res) == 2)
+  expect_true(res[res[,1] == "sdsd",]["count"] == 2L)
+  expect_true(res[res[,1] == "sdrd",]["count"] == 1L)
+  
+})
+
+test_that("ham_dist", {
+  expect_equal(simhash_dist("1","1"), 0)
+  expect_equal(simhash_dist("1","2"), 2)
+  res = simhash_dist_mat(c("1","12","123"),c("2","1"))
+  expect_equal(res, structure(c(2L, 3L, 5L, 0L, 3L, 5L), .Dim = c(3L, 2L)))
+})
+
+test_that("print",{
+  print(worker())
+  print(worker("keywords"))
+  print(worker("simhash"))
+})

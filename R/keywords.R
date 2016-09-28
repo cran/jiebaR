@@ -7,7 +7,8 @@
 #' 
 #' There is a symbol \code{<=} for this function.
 #' @seealso \code{\link{<=.keywords}} \code{\link{worker}} 
-#' @param code A Chinese sentence or the path of a text file. 
+#' @param code For \code{keywords}, a Chinese sentence or the path of a text file. 
+#' For \code{vector_keywords}, a character vector of segmented words.
 #' @param jiebar jiebaR Worker.
 #' @return a vector of keywords with weight.
 #' @references \url{http://en.wikipedia.org/wiki/Tf-idf}
@@ -29,7 +30,7 @@ keywords <- function(code, jiebar) {
   if (file.exists(code) && jiebar$write != "NOFILE") {
     encoding <- jiebar$encoding
     
-    if(jiebar$detect == T)  encoding <- filecoding(code)
+    if(jiebar$detect == T)  encoding <- file_coding(code)
     keyl(code = code, jiebar = jiebar, encoding = encoding)
     
   } else {

@@ -44,7 +44,7 @@ tagging<- function(code, jiebar) {
       output<-jiebar$output
     }
     
-    if(jiebar$detect==T)  encoding<-filecoding(code[1])
+    if(jiebar$detect==T)  encoding<-file_coding(code[1])
     
     FILESMODE <- T
     
@@ -110,7 +110,7 @@ tagl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
               for(num in 1:lines_of_output){
                 out.lines[[num]]<-gsub("\\s x\\s","",paste(out.lines[[num]], collapse = " "))
                 writeLines(paste(out.lines[[num]], collapse = " "), output.w)
-                writeLines("\n", output.w)
+                # writeLines("\n", output.w)
               }
             } else {
               out.lines<-gsub("\\s x\\s","",paste(out.lines, collapse = " "))
@@ -231,4 +231,26 @@ tagw <- function(code, jiebar,  symbol, FILESMODE) {
     }
   }
   result
+}
+
+#' Tag the a character vector
+#' 
+#' @param string  a character vector of segmented words.
+#' @param jiebar jiebaR Worker.
+#' @export
+#' @examples 
+#' \dontrun{
+#' cc = worker()
+#' (res = cc["this is test"])
+#' vector_tag(res, cc)
+#' }
+#' 
+vector_tag = function(string, jiebar){
+  stopifnot("jieba" %in% class(jiebar))
+  if(.Platform$OS.type == "windows"){
+    string = enc2utf8(string)
+  }
+  res = jiebaclass_tag_vec(string, jiebar$worker)
+  Encoding(res) = "UTF-8"
+  res
 }

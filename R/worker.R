@@ -2,28 +2,28 @@
 #' 
 #' This function can initialize jiebaR workers. You can initialize different 
 #' kinds of workers including \code{mix}, \code{mp}, \code{hmm}, 
-#' \code{query}, \code{tag}, \code{simhash}, and \code{keywords}.
+#' \code{query}, \code{full}, \code{tag}, \code{simhash}, and \code{keywords}.
 #' see Detail for more information.
 #' 
-#' @param type The type of jiebaR workers including \code{mix}, \code{mp}, \code{hmm}, 
+#' @param type The type of jiebaR workers including \code{mix}, \code{mp}, \code{hmm}, \code{full}, 
 #'   \code{query}, \code{tag}, \code{simhash}, and \code{keywords}.
 #'   
 #' @param dict A path to main dictionary, default value is \code{DICTPATH},
-#'  and the value is used for \code{mix}, \code{mp}, \code{query},
+#'  and the value is used for \code{mix}, \code{mp}, \code{query}, \code{full}, 
 #'  \code{tag}, \code{simhash} and \code{keywords} workers.
 #'  
-#' @param hmm A path to Hidden Markov Model, default value is \code{HMMPATH}, 
+#' @param hmm A path to Hidden Markov Model, default value is \code{HMMPATH}, \code{full}, 
 #' and the value is used for \code{mix}, \code{hmm}, \code{query}, 
 #'  \code{tag}, \code{simhash} and \code{keywords} workers.
 #'   
-#' @param user A path to user dictionary, default value is \code{USERPATH},
-#'  and the value is used for \code{mix}, \code{tag} and \code{mp} workers.
+#' @param user A path to user dictionary, default value is \code{USERPATH}, 
+#'  and the value is used for \code{mix}, \code{full},  \code{tag} and \code{mp}  workers.
 #'
 #' @param idf A path to inverse document frequency, default value is \code{IDFPATH},
 #'  and the value is used for \code{simhash} and \code{keywords} workers.
 #'   
 #' @param stop_word A path to stop word dictionary, default value is \code{STOPPATH},
-#'  and the value is used for \code{simhash}, \code{keywords}, \code{tagger} and \code{segment} workers. Encoding of this file is checked by \code{filecoding}, and it should be UTF-8 encoding. For \code{segment} workers, the default \code{STOPPATH} will not be used, so you should provide another file path.
+#'  and the value is used for \code{simhash}, \code{keywords}, \code{tagger} and \code{segment} workers. Encoding of this file is checked by \code{file_coding}, and it should be UTF-8 encoding. For \code{segment} workers, the default \code{STOPPATH} will not be used, so you should provide another file path.
 #'   
 #' @param write Whether to write the output to a file, or return 
 #'   a the result in a object. This value will only be used when 
@@ -43,7 +43,7 @@
 #' @param user_weight the weight of the user dict words. "min" "max" or "median".
 #'   
 #' @param detect Whether to detect the encoding of input file 
-#'  using \code{filecoding} function. If encoding 
+#'  using \code{file_coding} function. If encoding 
 #'  detection is enable, the value of \code{encoding} will be 
 #'  ignore.
 #'  
@@ -60,7 +60,7 @@
 #' @param bylines return the result by the lines of input files
 #' 
 #' @return  This function returns an environment containing segmentation 
-#' settings and worker. Public settings can be modified and got 
+#' settings and worker. Public settings can be modified 
 #' using \code{$}.
 #' 
 #' @details 
@@ -86,10 +86,13 @@
 #' \code{hmm} and \code{user} should be provided when initializing 
 #' jiebaR worker.
 #' 
+#' 
 #' QuerySegment model uses MixSegment to construct segmentation and then 
 #' enumerates all the possible long words in the dictionary.  \code{dict}, 
 #' \code{hmm} and \code{qmax} should be provided when initializing 
 #' jiebaR worker.
+#' 
+#' FullSegment model will enumerates all the possible words in the dictionary.
 #' 
 #' Speech Tagging worker uses MixSegment model to cut word and 
 #' tag each word after segmentation using labels compatible with 
@@ -108,33 +111,42 @@
 #' jiebaR worker.
 #' 
 #' @examples 
-#' ### Note: Can not display Chinese character on Windows here.
+#' ### Note: Can not display Chinese characters here.
 #' \dontrun{
 #' words = "hello world"
-#' test1 = worker()
-#' test1
-#' test1 <= words}
+#' engine1 = worker()
+#' segment(words, engine1)
+#'
+#' # "./temp.txt" is a file path
 #' 
-#' \dontrun{
-#' test <= "./temp.txt"
-#'  
-#' engine2 = worker("mix",symbol = T)
-#' engine2 <= "./temp.txt"
-#' engine2
-#' engine2$symbol = T
-#' engine2
-#' engine2 <= words
+#' segment("./temp.txt", engine1)
 #' 
+#' engine2 = worker("hmm")
+#' segment("./temp.txt", engine2)
+#' 
+#' engine2$write = T
+#' segment("./temp.txt", engine2)
+#'
 #' engine3 = worker(type = "mix", dict = "dict_path",symbol = T)
-#' engine3 <= "./temp.txt"
+#' segment("./temp.txt", engine3)
 #'  }
-#'  \dontrun{
-#' keys = worker("keywords", topn = 1)
-#' keys <= words
-#' tagger = worker("tag")
-#' tagger <= words}
+#'  
+#' \dontrun{
+#' ### Keyword Extraction
+#' engine = worker("keywords", topn = 1)
+#' keywords(words, engine)
 #' 
-#' @author Qin Wenfeng 
+#' ### Speech Tagging 
+#' tagger = worker("tag")
+#' tagging(words, tagger)
+#' 
+#' ### Simhash
+#' simhasher = worker("simhash", topn = 1)
+#' simhash(words, simhasher)
+#' distance("hello world" , "hello world!" , simhasher)
+#' 
+#' show_dictpath()
+#' }
 #' @export
 worker <- function(type = "mix", dict = DICTPATH, hmm = HMMPATH, 
                    user = USERPATH, idf = IDFPATH, stop_word = STOPPATH, write = T,
@@ -168,7 +180,7 @@ worker <- function(type = "mix", dict = DICTPATH, hmm = HMMPATH,
     if(!file.exists(stop2)){
       stop("There is no such file for stop words.")
     }
-    encodings = suppressWarnings(filecoding(stop2))
+    encodings = suppressWarnings(file_coding(stop2))
     if(encodings != "UTF-8" && encodings != "binary"){
       cat("Encoding of stop words file: ",encodings,"\n")
       warning("stop words file should be UTF-8 encoding.")
@@ -218,11 +230,3 @@ assignjieba<-function(worker,detect,encoding,symbol,lines,output,write,private,b
   assign(x = "bylines",value = bylines, envir=result)
 }
 
-read_stop_words<- function(filepath){
-  if(!file.exists(filepath)){
-    stop("There is no such file for stopwords.")
-  }
-  res = readLines(filepath,encoding = filecoding(filepath))
-  class(res) <- "stopword_list"
-  res
-}

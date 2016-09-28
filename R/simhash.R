@@ -7,7 +7,8 @@
 #' 
 #' There is a symbol \code{<=} for this function.
 #' @seealso \code{\link{<=.simhash}} \code{\link{worker}} 
-#' @param code A Chinese sentence or the path of a text file. 
+#' @param code For \code{simhash}, a Chinese sentence or the path of a text file.
+#' For \code{vector_simhash}, a character vector of segmented words. 
 #' @param jiebar jiebaR Worker.
 #' @references MS Charikar - Similarity Estimation Techniques from Rounding Algorithms
 #' @author Qin Wenfeng
@@ -30,7 +31,7 @@ simhash <- function(code, jiebar) {
   
   if (file.exists(code) && jiebar$write != "NOFILE") {
     encoding <- jiebar$encoding
-    if(jiebar$detect == T)  encoding<-filecoding(code)
+    if(jiebar$detect == T)  encoding<-file_coding(code)
     simhashl(code = code, jiebar = jiebar, encoding = encoding)
   } else {
     if (.Platform$OS.type == "windows") {
@@ -99,29 +100,30 @@ vector_simhash <- function(code,jiebar){
   result
 }
 
-
-
-
-
 #' Hamming distance of words
 #' 
-#' The function uses Simhash worker to do keyword extraction and find 
+#' This function uses Simhash worker to do keyword extraction and finds 
 #' the keywords from two inputs, and then computes Hamming distance 
 #' between them.
 #' 
-#' @param codel a Chinese sentence or the path of a text file
-#' @param coder a Chinese sentence or the path of a text file
-#' @param jiebar jiebaR Worker
+#' @param codel For \code{distance}, a Chinese sentence or the path of a text file, 
+#' For \code{vector_distance}, a character vector of segmented words.
+#' @param coder  For \code{distance}, a Chinese sentence or the path of a text file, 
+#' For \code{vector_distance}, a character vector of segmented words.
+#' @param jiebar jiebaR worker
 #' @author Qin Wenfeng
 #' @seealso \code{\link{worker}} 
 #' @references \url{http://en.wikipedia.org/wiki/Hamming_distance}
 #' @examples 
 #' \dontrun{
-#' ### Simhash
+#' 
 #' words = "hello world"
 #' simhasher = worker("simhash", topn = 1)
 #' simhasher <= words
 #' distance("hello world" , "hello world!" , simhasher)
+#' 
+#' vector_distance(c("hello","world") , c("hello", "world","!") , simhasher)
+#' 
 #' }
 #' @export
 distance <- function(codel,coder,jiebar){
@@ -136,7 +138,7 @@ distance <- function(codel,coder,jiebar){
   encoding <- jiebar$encoding
   
   if (file.exists(codel)) {
-    if(jiebar$detect == T)  encoding <- filecoding(codel)
+    if(jiebar$detect == T)  encoding <- file_coding(codel)
     codel <- distancel(codel,jiebar,encoding)
   } else{
     if (.Platform$OS.type == "windows") {
@@ -144,7 +146,7 @@ distance <- function(codel,coder,jiebar){
     }
   }
   if (file.exists(coder) && jiebar$write != "NOFILE") {
-    if(jiebar$detect == T)  encoding <- filecoding(coder)
+    if(jiebar$detect == T)  encoding <- file_coding(coder)
     coder <- distancel(coder,jiebar,encoding)
   } else{
     if (.Platform$OS.type == "windows") {

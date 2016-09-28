@@ -30,7 +30,6 @@
 #' jiebaR worker.
 #' 
 #' There is a symbol \code{<=} for this function.
-#' @author Qin Wenfeng
 #' @param code A Chinese sentence or the path of a text file. 
 #' @param jiebar jiebaR Worker.
 #' @param mod change default result type, value can be "mix","hmm","query","full","level", or "mp"
@@ -61,7 +60,7 @@ segment <- function(code, jiebar,mod = NULL) {
       output<-jiebar$output
     }
     encoding<-jiebar$encoding
-    if(jiebar$detect==T)  encoding<-filecoding(code[1])
+    if(jiebar$detect==T)  encoding<-file_coding(code[1])
     FILESMODE <- T
     res = cutl(code = code[1], jiebar=jiebar,symbol = jiebar$symbol, lines = jiebar$lines, 
          output = output, encoding = encoding, write_file= jiebar$write,FILESMODE = FILESMODE, mod = mod)
@@ -124,7 +123,7 @@ cutl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
               lines_of_output <- length(out.lines)
               for(num in 1:lines_of_output){
                 writeLines(paste(out.lines[[num]], collapse = " "), output.w)
-                writeLines("\n", output.w)
+                # writeLines("\n", output.w)
               }
             } else {
               writeLines(paste(out.lines, collapse = " "), output.w)
@@ -176,7 +175,6 @@ cutl <- function(code, jiebar, symbol, lines, output, encoding, write_file,FILES
 
 
 cutw <- function(code, jiebar,  symbol, FILESMODE, mod) {
-  
 
   if(jiebar$bylines == FALSE){
     result = engine_cut(code,jiebar,mod)
@@ -209,9 +207,6 @@ cutw <- function(code, jiebar,  symbol, FILESMODE, mod) {
     }
   }
 
-  # if(!is.null(jiebar$PrivateVarible$loaded_stop_words)){
-  #   result = filter_segment(result,jiebar$PrivateVarible$loaded_stop_words)
-  # }
   return(result)
 }
 
