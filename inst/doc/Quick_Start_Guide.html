@@ -17,10 +17,10 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -33,13 +33,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -81,7 +79,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -289,16 +309,16 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>You can use <code>worker()</code> to initialize a worker, and then use <code>[]</code> or <code>segment()</code> to do the segmentation.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(jiebaR)</a></code></pre></div>
 <pre><code>## Loading required package: jiebaRD</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">##  Using default settings to initialize a worker.</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">##  Using default settings to initialize a worker.</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">cutter =<span class="st"> </span><span class="kw">worker</span>()</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">###  Note: Can not display Chinese characters here.</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">###  Note: Can not display Chinese characters here.</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw">segment</span>( <span class="st">&quot;This is a good day!&quot;</span> , cutter )</a></code></pre></div>
 <pre><code>## [1] &quot;This&quot; &quot;is&quot;   &quot;a&quot;    &quot;good&quot; &quot;day&quot;</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">## OR cutter[&quot;This is a good day!&quot;]</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## OR cutter[&quot;This is a good day!&quot;]</span></a></code></pre></div>
 <p>You can use file path as input.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">segment</span>( <span class="st">&quot;./temp.dat&quot;</span> , cutter ) ### Auto encoding detection.</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">segment</span>( <span class="st">&quot;./temp.dat&quot;</span> , cutter ) <span class="co">### Auto encoding detection.</span></a></code></pre></div>
 <pre><code>## [1] &quot;temp&quot; &quot;dat&quot;</code></pre>
 <p>You can initialize multiple engines simultaneously.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">cutter2 =<span class="st"> </span><span class="kw">worker</span>(<span class="dt">type  =</span> <span class="st">&quot;mix&quot;</span>, </a>
@@ -308,7 +328,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb8-5" data-line-number="5">                 <span class="dt">detect=</span>T,      <span class="dt">symbol =</span> F,</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">                 <span class="dt">lines =</span> <span class="fl">1e+05</span>, <span class="dt">output =</span> <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb8-7" data-line-number="7">                 ) </a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">cutter2   ### Print information of worker</a></code></pre></div>
+<a class="sourceLine" id="cb8-8" data-line-number="8">cutter2   <span class="co">### Print information of worker</span></a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">Worker Type<span class="op">:</span><span class="st">  </span>Mix Segment</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">Detect Encoding <span class="op">:</span><span class="st">  </span><span class="ot">TRUE</span></a>
@@ -339,9 +359,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb14-2" data-line-number="2">cutter<span class="op">$</span>detect</a></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>You can use custom dictionar. jiebaR is able to identify new words, but adding your own new words can ensure a higher accuracy. <a href="https://github.com/studyzy/imewlconverter">imewlconverter</a> is a good tools for dictionary construction.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">show_dictpath</span>() ### Show path</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">show_dictpath</span>() <span class="co">### Show path</span></a></code></pre></div>
 <pre><code>## [1] &quot;/Library/Frameworks/R.framework/Versions/3.5/Resources/library/jiebaRD/dict&quot;</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">?<span class="kw">edit_dict</span>()   ### For more information</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">?<span class="kw">edit_dict</span>()   <span class="co">### For more information</span></a></code></pre></div>
 </div>
 <div id="speech-tagging" class="section level3">
 <h3>Speech Tagging</h3>
@@ -391,8 +411,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="more-information-and-issues" class="section level2">
 <h2>More Information and Issues</h2>
-<p><a href="https://github.com/qinwf/jiebaR" class="uri">https://github.com/qinwf/jiebaR</a></p>
-<p><a href="https://github.com/yanyiwu/cppjieba" class="uri">https://github.com/yanyiwu/cppjieba</a></p>
+<p><a href="https://github.com/qinwf/jiebaR">https://github.com/qinwf/jiebaR</a></p>
+<p><a href="https://github.com/yanyiwu/cppjieba">https://github.com/yanyiwu/cppjieba</a></p>
 </div>
 
 
