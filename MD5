@@ -1,4 +1,4 @@
-1e9f3c0088a45afc34d01fe7077171f3 *DESCRIPTION
+57a74f946793ac209c0ba62993908aee *DESCRIPTION
 45153f916065de795142d5a8ffa8389e *LICENSE
 520f4a20ccf7c248a92bb62c861fa62e *NAMESPACE
 e76dda61729f85d6f04d7a4cfd15068d *NEWS
@@ -22,13 +22,12 @@ d9662600254825ab7ddfedd6aae4298e *R/words_freq.R
 ff46766f3cc045edc8dbb5f9b131696a *R/worker.R
 46e271b6ad406358a7b3cde6c14dce76 *R/worker_func.R
 2090fd23cc52ef0a2cc8c39fac12d590 *R/zzz.R
-fa9a1e68c390318930738551ed41c206 *README.md
-c151008f607f6cca1a8b7cd5782d7aa4 *build/vignette.rds
+468e1abea8c2779f77f07491e00c1658 *build/vignette.rds
 d19c6fb97530d181462f755ea5b79cf2 *inst/AUTHORS
 a7b272eceafa4989c43bf75927d0ae79 *inst/COPYRIGHTS
 cd07e815f8aebf6f4d9edfd2e551871d *inst/doc/Quick_Start_Guide.R
-eb1ab6685a05ce56d16f5435bfd37626 *inst/doc/Quick_Start_Guide.Rmd
-03ae96b3509c81e0fcc3e940bd6d6f23 *inst/doc/Quick_Start_Guide.html
+5756ce4afbfa72925a10226ceccda0a4 *inst/doc/Quick_Start_Guide.Rmd
+71211aec76687240877a56b5b72f78de *inst/doc/Quick_Start_Guide.html
 70d571e7b00c3e0313082429832baab7 *inst/include/jiebaR.h
 3e0b533fa7b2559143e1a86c99379574 *inst/include/jiebaRAPI.h
 2bec92bdbdb6af5f9fe40f8afe1a27b0 *inst/include/lib/DictTrie.hpp
@@ -55,7 +54,7 @@ ab7a994520ac0aaec5d58efcbb7ae004 *inst/include/lib/limonp/LocalVector.hpp
 9b4ec681c6f5db2086002b1af99e6266 *inst/include/lib/limonp/Logging.hpp
 6a73215b49ef0eee634aa285283bf2c6 *inst/include/lib/limonp/NonCopyable.hpp
 40b0811cd7a5cd787459ce7055a1aa02 *inst/include/lib/limonp/StdExtension.hpp
-a00654d0788323806683223e32b54f6e *inst/include/lib/limonp/StringUtil.hpp
+927a2aebf51206f27c24ebf05111dcf3 *inst/include/lib/limonp/StringUtil.hpp
 0995a32bc90d6e3386820552b88b2c3e *inst/include/segtype-v4.hpp
 debe7af9bcfef1bbd0ce055d9749c202 *inst/model/backup.rda
 debe7af9bcfef1bbd0ce055d9749c202 *inst/model/model.rda
@@ -120,4 +119,4 @@ b0588417eecb4fd528d5d0173f177d7a *tests/testthat/C_API/tests/testthat.R
 221343e5951b370729b113bb0f23e5be *tests/testthat/bylines.utf8
 21a299eb9fbecb4f12194836937803e0 *tests/testthat/test-api.R
 07cc8dbdeaa9589a506e574b9282ac7c *tests/testthat/test-cut.R
-eb1ab6685a05ce56d16f5435bfd37626 *vignettes/Quick_Start_Guide.Rmd
+5756ce4afbfa72925a10226ceccda0a4 *vignettes/Quick_Start_Guide.Rmd

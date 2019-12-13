@@ -3,8 +3,8 @@ Type: Package
 Title: Chinese Text Segmentation
 Description: Chinese text segmentation, keyword extraction and speech tagging
     For R.
-Version: 0.10.99
-Date: 2019-3-11
+Version: 0.11
+Date: 2019-12-13
 Author: Qin Wenfeng, Wu Yanyi 
 Maintainer: Qin Wenfeng <mail@qinwenfeng.com>
 License: MIT + file LICENSE
@@ -17,6 +17,6 @@ BugReports: https://github.com/qinwf/jiebaR/issues
 VignetteBuilder: knitr
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
-Packaged: 2019-03-11 08:42:22 UTC; qinwf
+Packaged: 2019-12-13 17:12:13 UTC; qinwf
 Repository: CRAN
-Date/Publication: 2019-03-12 06:00:09 UTC
+Date/Publication: 2019-12-13 17:40:02 UTC

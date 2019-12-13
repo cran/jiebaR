@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +36,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -94,7 +95,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -289,6 +290,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -307,92 +311,92 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="text-segmentation" class="section level3">
 <h3>Text Segmentation</h3>
 <p>You can use <code>worker()</code> to initialize a worker, and then use <code>[]</code> or <code>segment()</code> to do the segmentation.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(jiebaR)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(jiebaR)</a></code></pre></div>
 <pre><code>## Loading required package: jiebaRD</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">##  Using default settings to initialize a worker.</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">cutter =<span class="st"> </span><span class="kw">worker</span>()</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">###  Note: Can not display Chinese characters here.</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw">segment</span>( <span class="st">&quot;This is a good day!&quot;</span> , cutter )</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">##  Using default settings to initialize a worker.</span></a>
+<a class="sourceLine" id="cb3-2" title="2">cutter =<span class="st"> </span><span class="kw">worker</span>()</a>
+<a class="sourceLine" id="cb3-3" title="3"></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">###  Note: Can not display Chinese characters here.</span></a>
+<a class="sourceLine" id="cb3-5" title="5"></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="kw">segment</span>( <span class="st">&quot;This is a good day!&quot;</span> , cutter )</a></code></pre></div>
 <pre><code>## [1] &quot;This&quot; &quot;is&quot;   &quot;a&quot;    &quot;good&quot; &quot;day&quot;</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## OR cutter[&quot;This is a good day!&quot;]</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co">## OR cutter[&quot;This is a good day!&quot;]</span></a></code></pre></div>
 <p>You can use file path as input.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">segment</span>( <span class="st">&quot;./temp.dat&quot;</span> , cutter ) <span class="co">### Auto encoding detection.</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">segment</span>( <span class="st">&quot;./temp.dat&quot;</span> , cutter ) <span class="co">### Auto encoding detection.</span></a></code></pre></div>
 <pre><code>## [1] &quot;temp&quot; &quot;dat&quot;</code></pre>
 <p>You can initialize multiple engines simultaneously.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">cutter2 =<span class="st"> </span><span class="kw">worker</span>(<span class="dt">type  =</span> <span class="st">&quot;mix&quot;</span>, </a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">                 <span class="dt">dict =</span> <span class="st">&quot;some_path/jieba.dict.utf8&quot;</span>,</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">                 <span class="dt">hmm   =</span> <span class="st">&quot;some_path/hmm_model.utf8&quot;</span>,  </a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                 <span class="dt">user  =</span> <span class="st">&quot;some_path/test.dict.utf8&quot;</span>,</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">                 <span class="dt">detect=</span>T,      <span class="dt">symbol =</span> F,</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">                 <span class="dt">lines =</span> <span class="fl">1e+05</span>, <span class="dt">output =</span> <span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">                 ) </a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">cutter2   <span class="co">### Print information of worker</span></a></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">Worker Type<span class="op">:</span><span class="st">  </span>Mix Segment</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">Detect Encoding <span class="op">:</span><span class="st">  </span><span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">Default Encoding<span class="op">:</span><span class="st">  </span>UTF<span class="dv">-8</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">Keep Symbols    <span class="op">:</span><span class="st">  </span><span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">Output Path     <span class="op">:</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">Write File      <span class="op">:</span><span class="st">  </span><span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">Max Read Lines  <span class="op">:</span><span class="st">  </span><span class="fl">1e+05</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">Fixed Model Components<span class="op">:</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="er">$</span>dict</a>
-<a class="sourceLine" id="cb9-13" data-line-number="13">[<span class="dv">1</span>] <span class="st">&quot;dict/jieba.dict.utf8&quot;</span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="op">$</span>hmm</a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">[<span class="dv">1</span>] <span class="st">&quot;dict/hmm_model.utf8&quot;</span></a>
-<a class="sourceLine" id="cb9-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb9-18" data-line-number="18"><span class="op">$</span>user</a>
-<a class="sourceLine" id="cb9-19" data-line-number="19">[<span class="dv">1</span>] <span class="st">&quot;dict/test.dict.utf8&quot;</span></a>
-<a class="sourceLine" id="cb9-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb9-21" data-line-number="21"><span class="op">$</span>detect <span class="op">$</span>encoding <span class="op">$</span>symbol <span class="op">$</span>output <span class="op">$</span>write <span class="op">$</span>lines can be reset.</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">cutter2 =<span class="st"> </span><span class="kw">worker</span>(<span class="dt">type  =</span> <span class="st">&quot;mix&quot;</span>,</a>
+<a class="sourceLine" id="cb8-2" title="2">                 <span class="dt">dict =</span> <span class="st">&quot;some_path/jieba.dict.utf8&quot;</span>,</a>
+<a class="sourceLine" id="cb8-3" title="3">                 <span class="dt">hmm   =</span> <span class="st">&quot;some_path/hmm_model.utf8&quot;</span>,</a>
+<a class="sourceLine" id="cb8-4" title="4">                 <span class="dt">user  =</span> <span class="st">&quot;some_path/test.dict.utf8&quot;</span>,</a>
+<a class="sourceLine" id="cb8-5" title="5">                 <span class="dt">detect=</span>T,      <span class="dt">symbol =</span> F,</a>
+<a class="sourceLine" id="cb8-6" title="6">                 <span class="dt">lines =</span> <span class="fl">1e+05</span>, <span class="dt">output =</span> <span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb8-7" title="7">                 )</a>
+<a class="sourceLine" id="cb8-8" title="8">cutter2   <span class="co">### Print information of worker</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">Worker Type<span class="op">:</span><span class="st">  </span>Mix Segment</a>
+<a class="sourceLine" id="cb9-2" title="2"></a>
+<a class="sourceLine" id="cb9-3" title="3">Detect Encoding <span class="op">:</span><span class="st">  </span><span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb9-4" title="4">Default Encoding<span class="op">:</span><span class="st">  </span>UTF<span class="dv">-8</span></a>
+<a class="sourceLine" id="cb9-5" title="5">Keep Symbols    <span class="op">:</span><span class="st">  </span><span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb9-6" title="6">Output Path     <span class="op">:</span></a>
+<a class="sourceLine" id="cb9-7" title="7">Write File      <span class="op">:</span><span class="st">  </span><span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb9-8" title="8">Max Read Lines  <span class="op">:</span><span class="st">  </span><span class="fl">1e+05</span></a>
+<a class="sourceLine" id="cb9-9" title="9"></a>
+<a class="sourceLine" id="cb9-10" title="10">Fixed Model Components<span class="op">:</span></a>
+<a class="sourceLine" id="cb9-11" title="11"></a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="er">$</span>dict</a>
+<a class="sourceLine" id="cb9-13" title="13">[<span class="dv">1</span>] <span class="st">&quot;dict/jieba.dict.utf8&quot;</span></a>
+<a class="sourceLine" id="cb9-14" title="14"></a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="op">$</span>hmm</a>
+<a class="sourceLine" id="cb9-16" title="16">[<span class="dv">1</span>] <span class="st">&quot;dict/hmm_model.utf8&quot;</span></a>
+<a class="sourceLine" id="cb9-17" title="17"></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="op">$</span>user</a>
+<a class="sourceLine" id="cb9-19" title="19">[<span class="dv">1</span>] <span class="st">&quot;dict/test.dict.utf8&quot;</span></a>
+<a class="sourceLine" id="cb9-20" title="20"></a>
+<a class="sourceLine" id="cb9-21" title="21"><span class="op">$</span>detect <span class="op">$</span>encoding <span class="op">$</span>symbol <span class="op">$</span>output <span class="op">$</span>write <span class="op">$</span>lines can be reset.</a></code></pre></div>
 <p>The public settings of the model can be modified by <code>$</code> <code>cutter$symbol = T</code>. Private settings are fixed when the engine is initialized, and you can get them by <code>cutter$PrivateVarible</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">cutter<span class="op">$</span>encoding</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">cutter<span class="op">$</span>encoding</a></code></pre></div>
 <pre><code>## [1] &quot;UTF-8&quot;</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">cutter<span class="op">$</span>detect</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">cutter<span class="op">$</span>detect</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">cutter<span class="op">$</span>detect =<span class="st"> </span>F</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">cutter<span class="op">$</span>detect</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">cutter<span class="op">$</span>detect =<span class="st"> </span>F</a>
+<a class="sourceLine" id="cb14-2" title="2">cutter<span class="op">$</span>detect</a></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>You can use custom dictionar. jiebaR is able to identify new words, but adding your own new words can ensure a higher accuracy. <a href="https://github.com/studyzy/imewlconverter">imewlconverter</a> is a good tools for dictionary construction.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">show_dictpath</span>() <span class="co">### Show path</span></a></code></pre></div>
-<pre><code>## [1] &quot;/Library/Frameworks/R.framework/Versions/3.5/Resources/library/jiebaRD/dict&quot;</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">?<span class="kw">edit_dict</span>()   <span class="co">### For more information</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">show_dictpath</span>() <span class="co">### Show path</span></a></code></pre></div>
+<pre><code>## [1] &quot;/Library/Frameworks/R.framework/Versions/3.6/Resources/library/jiebaRD/dict&quot;</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">?<span class="kw">edit_dict</span>()   <span class="co">### For more information</span></a></code></pre></div>
 </div>
 <div id="speech-tagging" class="section level3">
 <h3>Speech Tagging</h3>
 <p>Speech Tagging function <code>[.tagger</code> and <code>tagging</code> tag each word in a sentence after segmentation, using labels compatible with ictclas.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">words =<span class="st"> &quot;hello world&quot;</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">tagger =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;tag&quot;</span>)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">tagger[words]</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">words =<span class="st"> &quot;hello world&quot;</span></a>
+<a class="sourceLine" id="cb19-2" title="2">tagger =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;tag&quot;</span>)</a>
+<a class="sourceLine" id="cb19-3" title="3">tagger[words]</a></code></pre></div>
 <pre><code>##     eng     eng 
 ## &quot;hello&quot; &quot;world&quot;</code></pre>
 </div>
 <div id="keyword-extraction" class="section level3">
 <h3>Keyword Extraction</h3>
 <p>Keyword Extraction worker use MixSegment model to cut word and use TF-IDF algorithm to find the keywords.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">keys =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;keywords&quot;</span>, <span class="dt">topn =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">keys <span class="op">&lt;=</span><span class="st"> &quot;words of fun&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">keys =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;keywords&quot;</span>, <span class="dt">topn =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-2" title="2">keys <span class="op">&lt;=</span><span class="st"> &quot;words of fun&quot;</span></a></code></pre></div>
 <pre><code>## 11.7392 
 ##   &quot;fun&quot;</code></pre>
 </div>
 <div id="simhash-distance" class="section level3">
 <h3>Simhash Distance</h3>
 <p>Simhash worker can do keyword extraction and find the keywords from two inputs, and then computes Hamming distance between them.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"> words =<span class="st"> &quot;hello world&quot;</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"> simhasher =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;simhash&quot;</span>,<span class="dt">topn=</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"> simhasher[words]</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"> words =<span class="st"> &quot;hello world&quot;</span></a>
+<a class="sourceLine" id="cb23-2" title="2"> simhasher =<span class="st"> </span><span class="kw">worker</span>(<span class="st">&quot;simhash&quot;</span>,<span class="dt">topn=</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-3" title="3"> simhasher[words]</a></code></pre></div>
 <pre><code>## $simhash
 ## [1] &quot;3804341492420753273&quot;
 ## 
 ## $keyword
 ## 11.7392 
 ## &quot;hello&quot;</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">distance</span>(<span class="st">&quot;hello world&quot;</span> , <span class="st">&quot;hello world!&quot;</span> , simhasher)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">distance</span>(<span class="st">&quot;hello world&quot;</span> , <span class="st">&quot;hello world!&quot;</span> , simhasher)</a></code></pre></div>
 <pre><code>## $distance
 ## [1] 0
 ## 
@@ -415,6 +419,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p><a href="https://github.com/yanyiwu/cppjieba">https://github.com/yanyiwu/cppjieba</a></p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
