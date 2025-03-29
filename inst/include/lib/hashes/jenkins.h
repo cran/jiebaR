@@ -57,7 +57,8 @@
   c -= b;  c ^= rot(b, 4);  b += a; \
 }
 
-#define final(a,b,c) \
+// was 'final', but that is a C++11 keyword.
+#define local_final(a,b,c) \
 { \
   c ^= b; c -= rot(b,14); \
   a ^= c; a -= rot(c,11); \
@@ -271,7 +272,7 @@ namespace Simhash {
 			    }
 			}
 
-			final(a,b,c);
+			local_final(a,b,c);
 			*pc=c; *pb=b;
 		}
 	};

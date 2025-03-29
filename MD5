@@ -1,4 +1,4 @@
-57a74f946793ac209c0ba62993908aee *DESCRIPTION
+89c539246efcf40b95e8ed70edd7f81a *DESCRIPTION
 45153f916065de795142d5a8ffa8389e *LICENSE
 520f4a20ccf7c248a92bb62c861fa62e *NAMESPACE
 e76dda61729f85d6f04d7a4cfd15068d *NEWS
@@ -49,7 +49,7 @@ e9c690fac89b2ea98914089cc70dfb9e *inst/include/lib/PosTagger.hpp
 e960e28691cec228a816e80e9d771772 *inst/include/lib/TransCode.hpp
 d26deb0d7d386204d3c72da527170ebc *inst/include/lib/Trie.hpp
 c2bc8cd94f4c0c60009505a115459acf *inst/include/lib/Unicode.hpp
-cbc5000e5b2a509d07d6716583de02b4 *inst/include/lib/hashes/jenkins.h
+8c75b81043d6feee00dadead29585f71 *inst/include/lib/hashes/jenkins.h
 ab7a994520ac0aaec5d58efcbb7ae004 *inst/include/lib/limonp/LocalVector.hpp
 9b4ec681c6f5db2086002b1af99e6266 *inst/include/lib/limonp/Logging.hpp
 6a73215b49ef0eee634aa285283bf2c6 *inst/include/lib/limonp/NonCopyable.hpp
